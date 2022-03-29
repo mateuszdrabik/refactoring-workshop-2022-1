@@ -84,7 +84,7 @@ void Controller::receive(std::unique_ptr<Event> e)
                 break;
             }
         }
-
+        
         if (not lost) {
             if (std::make_pair(newHead.x, newHead.y) == m_foodPosition) {
                 m_scorePort.send(std::make_unique<EventT<ScoreInd>>());
@@ -161,6 +161,7 @@ void Controller::receive(std::unique_ptr<Event> e)
 
                 m_foodPosition = std::make_pair(receivedFood.x, receivedFood.y);
 
+
             } catch (std::bad_cast&) {
                 try {
                     auto requestedFood = *dynamic_cast<EventT<FoodResp> const&>(*e);
@@ -173,6 +174,7 @@ void Controller::receive(std::unique_ptr<Event> e)
                         }
                     }
 
+
                     if (requestedFoodCollidedWithSnake) {
                         m_foodPort.send(std::make_unique<EventT<FoodReq>>());
                     } else {
@@ -182,6 +184,7 @@ void Controller::receive(std::unique_ptr<Event> e)
                         placeNewFood.value = Cell_FOOD;
                         m_displayPort.send(std::make_unique<EventT<DisplayInd>>(placeNewFood));
                     }
+
 
                     m_foodPosition = std::make_pair(requestedFood.x, requestedFood.y);
                 } catch (std::bad_cast&) {
